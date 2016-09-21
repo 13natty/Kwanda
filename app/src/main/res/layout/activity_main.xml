@@ -10,28 +10,96 @@
     tools:context="com.example.f3838284.kwanda.MainActivity">
 
     <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
-
-    <RelativeLayout
-        android:layout_below="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center">
-        <ImageView
-        android:id="@+id/outer"
+        android:id="@+id/title1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="@string/title_instruction1"
+        android:layout_weight="1"
+        android:width="0dp"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center" />
+
+    <TextView
+        android:id="@+id/title2"
+        android:layout_below="@+id/title1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/title_instruction2"
+        android:layout_weight="1"
+        android:width="0dp"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center" />
+    <TableLayout
+        android:id="@+id/display_table"
+        android:layout_below="@+id/title2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp">
+
+        <TableRow
+            android:paddingBottom="5dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:text="@string/FDLMP"/>
+            <TextView
+                android:id="@+id/fdlmp"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"/>
+        </TableRow>
+
+        <TableRow
+            android:paddingBottom="5dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:text="@string/delivery"/>
+            <TextView
+                android:id="@+id/delivery"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"/>
+        </TableRow>
+
+        <TableRow
+            android:paddingBottom="5dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:text="@string/duration"/>
+            <TextView
+                android:id="@+id/duration"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"/>
+
+            <Spinner
+                android:id="@+id/units"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/duration_units"/>
+        </TableRow>
+
+    </TableLayout>
+
+    <RelativeLayout
+        android:layout_below="@+id/display_table"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true">
+        <ImageView
+        android:id="@+id/outer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:src="@mipmap/two"
-        android:adjustViewBounds="true"/>
+        android:layout_centerHorizontal="true"/>
 
         <ImageView
             android:id="@+id/inner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/one"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerInParent="true"/>
     </RelativeLayout>
 </RelativeLayout>
