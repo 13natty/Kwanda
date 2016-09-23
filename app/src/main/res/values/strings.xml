@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Kwanda</string>
     <string name="title_instruction1">Rotate Wheel To Select Your</string>
-    <string name="title_instruction2">First Day of Last Menstrual Period (FDLMP)</string>
-    <string name="FDLMP">FDLMP </string>
+    <string name="title_instruction2">First Day of Last Period (FDLP)</string>
+    <string name="FDLMP">FDLP </string>
     <string name="delivery">Probable Day of Delivery </string>
     <string name="duration">Pregnancy Duration </string>
     <string-array name="duration_units">

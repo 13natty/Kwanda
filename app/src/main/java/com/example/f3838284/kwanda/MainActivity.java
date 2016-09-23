@@ -1,12 +1,18 @@
 package com.example.f3838284.kwanda;
 
+import android.animation.ObjectAnimator;
 import android.graphics.Matrix;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -18,15 +24,18 @@ import butterknife.InjectView;
 
 public class MainActivity extends AppCompatActivity {
     @InjectView(R.id.inner) ImageView inner;
+    @InjectView(R.id.today) ImageView today;
     @InjectView(R.id.fdlmp) TextView fdlmp;
     @InjectView(R.id.delivery) TextView delivery;
     @InjectView(R.id.duration) TextView duration;
     @InjectView(R.id.units) Spinner units;
+    @InjectView(R.id.progressBar) ProgressBar progressBar;
 
     private String Tag = MainActivity.class.getSimpleName();
     private int dialerWidth;
     private int dialerHeight;
     Matrix matrix = new Matrix();
+    Matrix todayMatrix = new Matrix();
     float angle = 0;
     private int monthInt;
     private String monthStr;
@@ -61,12 +70,20 @@ public class MainActivity extends AppCompatActivity {
 
 
         inner.setScaleType(ImageView.ScaleType.MATRIX);
+        today.setScaleType(ImageView.ScaleType.MATRIX);
         dialerWidth = inner.getDrawable().getIntrinsicWidth();
         dialerHeight = inner.getDrawable().getIntrinsicHeight();
 
 
 
         inner.setOnTouchListener(new MyOnTouchListener());
+
+        rotateToday(dayOfTheYear, today);
+
+        ObjectAnimator animation = ObjectAnimator.ofInt (progressBar, "progress", 120, 297); // see this max value coming back here, we animale towards that value
+        animation.setDuration (5000); //in milliseconds
+        animation.setInterpolator (new DecelerateInterpolator());
+        animation.start ();
     }
 
     String getMonthForInt(int num) {
@@ -101,6 +118,8 @@ public class MainActivity extends AppCompatActivity {
 
                 case MotionEvent.ACTION_MOVE:
                     double currentAngle = getAngle(event.getX(), event.getY());
+                    Log.d(Tag, "currentAngle ... "+currentAngle);
+                    Log.d(Tag, "startAngle ... "+startAngle);
                     rotateDialer((float) (startAngle - currentAngle), view);
                     startAngle = currentAngle;
                     // Perform the transformation
@@ -125,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void rotateDialer(float degrees, View view) {
         angle += degrees;
-
+        Log.d(Tag, "angle... "+angle);
         if(angle<-360){
             angle+=360;
         }else if(angle > 360){
@@ -200,6 +219,21 @@ public class MainActivity extends AppCompatActivity {
 
         matrix.postRotate(degrees, view.getMeasuredWidth() / 2,
                 view.getMeasuredHeight() / 2);
+    }
+
+    /**
+     * Animate today.
+     *
+     * @param degrees The degrees, the today should get rotated.
+     */
+    private void rotateToday(float degrees, View v) {
+        Animation a = new RotateAnimation(0.0f, (degrees+90),
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+                0.5f);
+        a.setFillAfter(true);
+        a.setRepeatCount(0);
+        a.setDuration(5000);
+        today.setAnimation(a);
     }
 
     private String getDateStr(int date) {
