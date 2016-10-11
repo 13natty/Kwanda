@@ -1,16 +1,23 @@
 package com.example.f3838284.kwanda;
 
 import android.animation.ObjectAnimator;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -24,12 +31,14 @@ import butterknife.InjectView;
 
 public class MainActivity extends AppCompatActivity {
     @InjectView(R.id.inner) ImageView inner;
+    @InjectView(R.id.outer) ImageView outer;
     @InjectView(R.id.today) ImageView today;
     @InjectView(R.id.fdlmp) TextView fdlmp;
     @InjectView(R.id.delivery) TextView delivery;
     @InjectView(R.id.duration) TextView duration;
     @InjectView(R.id.units) Spinner units;
-    @InjectView(R.id.progressBar) ProgressBar progressBar;
+    @InjectView(R.id.button_details) Button buttonDetails;
+
 
     private String Tag = MainActivity.class.getSimpleName();
     private int dialerWidth;
@@ -46,6 +55,13 @@ public class MainActivity extends AppCompatActivity {
     private String dateStr;
     private String deliveryDateStr;
     private Calendar c;
+    private Bitmap innerBitmap;
+    public static final String MyPREFERENCES = "FDLP";
+    public static final String FDLP = "FDLP";
+    public static final String DeliveryDate = "DayOfDelivery";
+    public static final String PregnancyDuration = "Duration";
+
+    private SharedPreferences sharedpreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,21 +85,72 @@ public class MainActivity extends AppCompatActivity {
         units.setVisibility(View.INVISIBLE);
 
 
-        inner.setScaleType(ImageView.ScaleType.MATRIX);
+        //inner.setScaleType(ImageView.ScaleType.MATRIX);
         today.setScaleType(ImageView.ScaleType.MATRIX);
-        dialerWidth = inner.getDrawable().getIntrinsicWidth();
-        dialerHeight = inner.getDrawable().getIntrinsicHeight();
+        dialerWidth = outer.getDrawable().getIntrinsicWidth();
+        dialerHeight = outer.getDrawable().getIntrinsicHeight();
 
 
 
         inner.setOnTouchListener(new MyOnTouchListener());
 
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        final int screenHeight = displaymetrics.heightPixels;
+        final int screenWidth = displaymetrics.widthPixels;
+
+        inner.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                inner.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                innerBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.one);
+                Log.d("Tage ..... ", "outer.getMeasuredWidth() "+outer.getMeasuredWidth());
+                if(screenHeight>screenWidth || screenHeight==screenWidth) {
+                    inner.setImageBitmap(getResizedBitmap(innerBitmap, outer.getMeasuredWidth(), outer.getMeasuredWidth()));
+                }
+            }
+        });
+
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, getApplicationContext().MODE_PRIVATE);
+
+        buttonDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //save selected date in shared pref
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+
+                editor.putString(FDLP, dateStr);
+                editor.putString(DeliveryDate, deliveryDateStr);
+                editor.putString(PregnancyDuration, pregnancyDuration+"");
+                editor.commit();
+
+                Intent myIntent = new Intent(MainActivity.this, DetailsActivity.class);
+                //myIntent.putExtra("key", value); //Optional parameters
+                MainActivity.this.startActivity(myIntent);
+
+            }
+        });
+
         rotateToday(dayOfTheYear, today);
 
-        ObjectAnimator animation = ObjectAnimator.ofInt (progressBar, "progress", 120, 297); // see this max value coming back here, we animale towards that value
-        animation.setDuration (5000); //in milliseconds
-        animation.setInterpolator (new DecelerateInterpolator());
-        animation.start ();
+
+    }
+
+    public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // CREATE A MATRIX FOR THE MANIPULATION
+//        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        // "RECREATE" THE NEW BITMAP
+        Bitmap resizedBitmap = Bitmap.createBitmap(
+                bm, 0, 0, width, height, matrix, false);
+
+        return resizedBitmap;
     }
 
     String getMonthForInt(int num) {
