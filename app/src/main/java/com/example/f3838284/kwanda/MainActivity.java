@@ -1,11 +1,15 @@
 package com.example.f3838284.kwanda;
 
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -100,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
         final int screenWidth = displaymetrics.widthPixels;
 
         inner.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onGlobalLayout() {
                 inner.getViewTreeObserver().removeOnGlobalLayoutListener(this);
@@ -119,14 +124,18 @@ public class MainActivity extends AppCompatActivity {
                 //save selected date in shared pref
                 SharedPreferences.Editor editor = sharedpreferences.edit();
 
-                editor.putString(FDLP, dateStr);
-                editor.putString(DeliveryDate, deliveryDateStr);
-                editor.putString(PregnancyDuration, pregnancyDuration+"");
-                editor.commit();
+                if(!dateStr.equalsIgnoreCase("Not set")) {
+                    editor.putString(FDLP, dateStr);
+                    editor.putString(DeliveryDate, deliveryDateStr);
+                    editor.putInt(PregnancyDuration, pregnancyDuration);
+                    editor.commit();
 
-                Intent myIntent = new Intent(MainActivity.this, DetailsActivity.class);
-                //myIntent.putExtra("key", value); //Optional parameters
-                MainActivity.this.startActivity(myIntent);
+                    Intent myIntent = new Intent(MainActivity.this, DetailsActivity.class);
+                    //myIntent.putExtra("key", value); //Optional parameters
+                    MainActivity.this.startActivity(myIntent);
+                }else{
+                    showDialog(MainActivity.this, "Rotate", "Rotate wheel to select your First Day Of Last Period (FDLP)");
+                }
 
             }
         });
@@ -134,6 +143,17 @@ public class MainActivity extends AppCompatActivity {
         rotateToday(dayOfTheYear, today);
 
 
+    }
+
+    public void showDialog(Activity activity, String title, CharSequence message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+        if (title != null) builder.setTitle(title);
+
+        builder.setMessage(message);
+        builder.setPositiveButton("OK", null);
+        //builder.setNegativeButton("Cancel", null);
+        builder.show();
     }
 
     public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
