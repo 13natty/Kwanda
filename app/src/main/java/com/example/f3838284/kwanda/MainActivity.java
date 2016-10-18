@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         //inner.setScaleType(ImageView.ScaleType.MATRIX);
-        today.setScaleType(ImageView.ScaleType.MATRIX);
+        //today.setScaleType(ImageView.ScaleType.MATRIX);
         dialerWidth = outer.getDrawable().getIntrinsicWidth();
         dialerHeight = outer.getDrawable().getIntrinsicHeight();
 
@@ -103,16 +103,26 @@ public class MainActivity extends AppCompatActivity {
         final int screenHeight = displaymetrics.heightPixels;
         final int screenWidth = displaymetrics.widthPixels;
 
+        Log.d("Tag ..... ", "displaymetrics.density "+displaymetrics.density);
+        Log.d("Tag ..... ", "dialerWidth "+dialerWidth);
+        Log.d("Tag ..... ", "displaymetrics.densityDpi "+displaymetrics.densityDpi);
+
         inner.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onGlobalLayout() {
                 inner.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                innerBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.one);
+                innerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.one);
                 Log.d("Tage ..... ", "outer.getMeasuredWidth() "+outer.getMeasuredWidth());
-                if(screenHeight>screenWidth || screenHeight==screenWidth) {
+                dialerWidth = outer.getMeasuredWidth();
+                dialerHeight = outer.getMeasuredHeight();
+                Log.d("Tage ..... ", "dialerWidth "+dialerWidth);
+                Log.d("Tage ..... ", "dialerHeight "+dialerHeight);
+                inner.setImageBitmap(getResizedBitmap(innerBitmap, dialerWidth, dialerHeight));
+                /*if(screenHeight>screenWidth || screenHeight==screenWidth) {
                     inner.setImageBitmap(getResizedBitmap(innerBitmap, outer.getMeasuredWidth(), outer.getMeasuredWidth()));
-                }
+                    inner.setScaleType(ImageView.ScaleType.MATRIX);
+                }*/
             }
         });
 
@@ -140,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        rotateToday(dayOfTheYear, today);
+        rotateToday(dayOfTheYear-3, today);
 
 
     }
@@ -156,7 +166,11 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
-    public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
+    public Bitmap getResizedBitmap(Bitmap image, int bitmapWidth, int bitmapHeight) {
+        return Bitmap.createScaledBitmap(image, bitmapWidth, bitmapHeight, true);
+    }
+
+    /*public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
         int width = bm.getWidth();
         int height = bm.getHeight();
         float scaleWidth = ((float) newWidth) / width;
@@ -171,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
                 bm, 0, 0, width, height, matrix, false);
 
         return resizedBitmap;
-    }
+    }*/
 
     String getMonthForInt(int num) {
         String month = "wrong";
@@ -320,7 +334,7 @@ public class MainActivity extends AppCompatActivity {
         a.setFillAfter(true);
         a.setRepeatCount(0);
         a.setDuration(5000);
-        today.setAnimation(a);
+        v.setAnimation(a);
     }
 
     private String getDateStr(int date) {
