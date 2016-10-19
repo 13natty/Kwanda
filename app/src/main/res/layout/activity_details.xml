@@ -1,162 +1,224 @@
-<android.support.design.widget.CoordinatorLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+    <android.support.design.widget.CoordinatorLayout
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/MyAppbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
-
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapse_toolbar"
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/MyAppbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            android:background="@color/material_deep_teal_500"
+            android:layout_height="wrap_content"
             android:fitsSystemWindows="true">
 
-            <ImageView
-                android:id="@+id/MyBg"
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:id="@+id/collapse_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fitsSystemWindows="true"
-                app:layout_collapseMode="pin"
-                android:scaleType="centerInside"/>
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                android:background="@color/material_deep_teal_500"
+                android:fitsSystemWindows="true">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/MyToolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:layout_collapseMode="pin" />
+                <ImageView
+                    android:id="@+id/MyBg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fitsSystemWindows="true"
+                    app:layout_collapseMode="pin"
+                    android:scaleType="centerInside"/>
 
-        </android.support.design.widget.CollapsingToolbarLayout>
-    </android.support.design.widget.AppBarLayout>
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/MyToolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                    app:layout_collapseMode="pin" />
+
+            </android.support.design.widget.CollapsingToolbarLayout>
+        </android.support.design.widget.AppBarLayout>
 
 
-    <android.support.v4.widget.NestedScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="fill_vertical"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <LinearLayout
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingTop="24dp">
+            android:background="#ffe5e5e5"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <android.support.v7.widget.CardView
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingTop="24dp">
 
-                <LinearLayout
-                    android:orientation="vertical"
+                <android.support.v7.widget.CardView
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <TextView
-                        android:id="@+id/firstcard_text"
+                    <LinearLayout
+                        android:orientation="vertical"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/colorAccent"
-                        android:textSize="20sp"
-                        android:text="COMMON PREGNANCY SYMPTOMS FOR WEEK "/>
-                    <TableLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_centerInParent="true"
-                        android:layout_marginTop="5dp"
-                        android:stretchColumns="*">
+                        android:layout_height="wrap_content">
 
-                        <TableRow
-                            android:id="@+id/text_tableRow1"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:weightSum="1" >
-                            <TextView
-                                android:id="@+id/size_text_one"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content" />
-                            <TextView
-                                android:id="@+id/size_text_two"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content" />
-                            <TextView
-                                android:id="@+id/size_text_three"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content" />
-
-                        </TableRow>
-
-                    </TableLayout>
-
-
-
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:id="@+id/embryo_size"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        android:textColor="@color/abc_search_url_text"
-                        android:text="Embryo Size\n\n"/>
-
-                    <TableLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_centerInParent="true"
-                        android:layout_marginTop="5dp"
-                        android:stretchColumns="*">
-
-                        <TableRow
-                            android:id="@+id/tableRow1"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:weightSum="1" >
-
-                        <ImageView
-                            android:id="@+id/size_image"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content" />
                         <TextView
-                            android:id="@+id/size_text"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content" />
+                            android:id="@+id/firstcard_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorAccent"
+                            android:textSize="20sp"
+                            android:text="COMMON PREGNANCY SYMPTOMS FOR WEEK "/>
+                        <TableLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_centerInParent="true"
+                            android:layout_marginTop="5dp"
+                            android:stretchColumns="*">
 
-                        </TableRow>
+                            <TableRow
+                                android:id="@+id/text_tableRow1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:weightSum="1" >
+                                <TextView
+                                    android:id="@+id/size_text_one"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content" />
+                                <TextView
+                                    android:id="@+id/size_text_two"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content" />
+                                <TextView
+                                    android:id="@+id/size_text_three"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content" />
 
-                    </TableLayout>
+                            </TableRow>
 
-                </LinearLayout>
+                        </TableLayout>
 
-            </android.support.v7.widget.CardView>
 
-        </LinearLayout>
 
-    </android.support.v4.widget.NestedScrollView>
+                    </LinearLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/embryo_size"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="20sp"
+                            android:textColor="@color/abc_search_url_text"
+                            android:text="Embryo Size\n\n"/>
+
+                        <TableLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_centerInParent="true"
+                            android:layout_marginTop="5dp"
+                            android:stretchColumns="*">
+
+                            <TableRow
+                                android:id="@+id/tableRow1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:weightSum="1" >
+
+                                <ImageView
+                                    android:id="@+id/size_image"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"/>
+                                <TextView
+                                    android:id="@+id/size_text"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content" />
+
+                            </TableRow>
+
+                        </TableLayout>
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/whats_inside"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorAccent"
+                            android:textSize="20sp"
+                            android:text="WHAT'S GOING ON INSIDE?"/>
+                        <TableLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_centerInParent="true"
+                            android:layout_marginTop="5dp"
+                            android:stretchColumns="*">
+
+                            <TableRow
+                                android:id="@+id/inside_text_tableRow1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:weightSum="1" >
+                                <TextView
+                                    android:id="@+id/inside_text"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content" />
+
+                            </TableRow>
+
+                        </TableLayout>
+
+
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+    </android.support.design.widget.CoordinatorLayout>
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/details_adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id"
+        />
+</RelativeLayout>

@@ -1,6 +1,5 @@
 package com.example.f3838284.kwanda;
 
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,14 +17,17 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
@@ -42,13 +44,13 @@ public class MainActivity extends AppCompatActivity {
     @InjectView(R.id.duration) TextView duration;
     @InjectView(R.id.units) Spinner units;
     @InjectView(R.id.button_details) Button buttonDetails;
+    @InjectView(R.id.adView) AdView mAdView;
 
 
     private String Tag = MainActivity.class.getSimpleName();
     private int dialerWidth;
     private int dialerHeight;
     Matrix matrix = new Matrix();
-    Matrix todayMatrix = new Matrix();
     float angle = 0;
     private int monthInt;
     private String monthStr;
@@ -66,12 +68,32 @@ public class MainActivity extends AppCompatActivity {
     public static final String PregnancyDuration = "Duration";
 
     private SharedPreferences sharedpreferences;
+    InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
+
+        ToastListener toastListener = new ToastListener(this);
+
+        mAdView.setAdListener(toastListener);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                requestNewInterstitial();
+                showDetails();
+            }
+        });
+
+        requestNewInterstitial();
 
         c = Calendar.getInstance();
         monthInt = c.get(Calendar.MONTH);
@@ -132,17 +154,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //save selected date in shared pref
-                SharedPreferences.Editor editor = sharedpreferences.edit();
 
                 if(!dateStr.equalsIgnoreCase("Not set")) {
-                    editor.putString(FDLP, dateStr);
-                    editor.putString(DeliveryDate, deliveryDateStr);
-                    editor.putInt(PregnancyDuration, pregnancyDuration);
-                    editor.commit();
+                    if (mInterstitialAd.isLoaded()) {
+                        mInterstitialAd.show();
+                    } else {
+                        showDetails();
+                    }
 
-                    Intent myIntent = new Intent(MainActivity.this, DetailsActivity.class);
-                    //myIntent.putExtra("key", value); //Optional parameters
-                    MainActivity.this.startActivity(myIntent);
                 }else{
                     showDialog(MainActivity.this, "Rotate", "Rotate wheel to select your First Day Of Last Period (FDLP)");
                 }
@@ -153,6 +172,26 @@ public class MainActivity extends AppCompatActivity {
         rotateToday(dayOfTheYear-3, today);
 
 
+    }
+
+    private void showDetails() {
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(FDLP, dateStr);
+        editor.putString(DeliveryDate, deliveryDateStr);
+        editor.putInt(PregnancyDuration, pregnancyDuration);
+        editor.commit();
+
+        Intent myIntent = new Intent(MainActivity.this, DetailsActivity.class);
+        //myIntent.putExtra("key", value); //Optional parameters
+        MainActivity.this.startActivity(myIntent);
+    }
+
+    private void requestNewInterstitial() {
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("3EB0234921C9D54B84C7DA7B018CC8AF")
+                .build();
+
+        mInterstitialAd.loadAd(adRequest);
     }
 
     public void showDialog(Activity activity, String title, CharSequence message) {
