@@ -24,6 +24,11 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
 
@@ -39,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     @InjectView(R.id.duration) TextView duration;
     @InjectView(R.id.units) Spinner units;
     @InjectView(R.id.button_details) Button buttonDetails;
+    @InjectView(R.id.adView) AdView mAdView;
 
 
     private String Tag = MainActivity.class.getSimpleName();
@@ -62,12 +68,32 @@ public class MainActivity extends AppCompatActivity {
     public static final String PregnancyDuration = "Duration";
 
     private SharedPreferences sharedpreferences;
+    InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
+
+        ToastListener toastListener = new ToastListener(this);
+
+        mAdView.setAdListener(toastListener);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                requestNewInterstitial();
+                showDetails();
+            }
+        });
+
+        requestNewInterstitial();
 
         c = Calendar.getInstance();
         monthInt = c.get(Calendar.MONTH);
@@ -130,7 +156,12 @@ public class MainActivity extends AppCompatActivity {
                 //save selected date in shared pref
 
                 if(!dateStr.equalsIgnoreCase("Not set")) {
-                    showDetails();
+                    if (mInterstitialAd.isLoaded()) {
+                        mInterstitialAd.show();
+                    } else {
+                        showDetails();
+                    }
+
                 }else{
                     showDialog(MainActivity.this, "Rotate", "Rotate wheel to select your First Day Of Last Period (FDLP)");
                 }
@@ -153,6 +184,14 @@ public class MainActivity extends AppCompatActivity {
         Intent myIntent = new Intent(MainActivity.this, DetailsActivity.class);
         //myIntent.putExtra("key", value); //Optional parameters
         MainActivity.this.startActivity(myIntent);
+    }
+
+    private void requestNewInterstitial() {
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("3EB0234921C9D54B84C7DA7B018CC8AF")
+                .build();
+
+        mInterstitialAd.loadAd(adRequest);
     }
 
     public void showDialog(Activity activity, String title, CharSequence message) {

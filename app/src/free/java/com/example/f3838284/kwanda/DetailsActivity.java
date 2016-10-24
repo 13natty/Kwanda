@@ -17,6 +17,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import static com.example.f3838284.kwanda.MainActivity.MyPREFERENCES;
 
 public class DetailsActivity extends AppCompatActivity {
@@ -38,6 +41,13 @@ public class DetailsActivity extends AppCompatActivity {
         TextView sizeText2 = (TextView) findViewById(R.id.size_text_two);
         TextView sizeText3 = (TextView) findViewById(R.id.size_text_three);
         TextView insideText = (TextView) findViewById(R.id.inside_text);
+        AdView mAdView = (AdView) findViewById(R.id.details_adView);
+
+        ToastListener toastListener = new ToastListener(this);
+
+        mAdView.setAdListener(toastListener);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         sharedpreferences = getSharedPreferences(MyPREFERENCES, getApplicationContext().MODE_PRIVATE);
         pregnancyDuration = sharedpreferences.getInt("Duration", 1);

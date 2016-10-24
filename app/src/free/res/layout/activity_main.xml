@@ -139,9 +139,8 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:orientation="horizontal"
-        android:gravity="bottom"
-        android:layout_alignParentBottom="true"
         android:layout_marginTop="20dp"
+        android:layout_above="@+id/adView"
         >
 
 
@@ -157,5 +156,13 @@
             />
 
     </RelativeLayout>
-
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id"
+        />
 </RelativeLayout>

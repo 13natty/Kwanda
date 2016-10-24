@@ -17,6 +17,18 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    productFlavors {
+        free {
+            applicationId "com.example.f3838284.kwanda.free"
+        }
+
+        paid {
+            applicationId "com.example.f3838284.kwanda.paid"
+        }
+    }
+    sourceSets { free { java.srcDirs = ['src/main/java', 'src/free/java/'] } }
+    sourceSets { paid { java.srcDirs = ['src/main/java', 'src/main/java/'] } }
 }
 
 dependencies {
@@ -25,6 +37,6 @@ dependencies {
     compile 'com.android.support:design:24.2.1'
     compile 'com.android.support:cardview-v7:24.2.1'
     compile 'com.jakewharton:butterknife:6.1.0'
-    compile 'com.google.android.gms:play-services-ads:9.6.1'
+    freeCompile 'com.google.android.gms:play-services-ads:9.6.1'
     testCompile 'junit:junit:4.12'
 }

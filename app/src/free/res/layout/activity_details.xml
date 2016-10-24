@@ -10,6 +10,7 @@
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+        android:layout_above="@+id/details_adView"
     android:fitsSystemWindows="true">
 
         <android.support.design.widget.AppBarLayout
@@ -212,5 +213,13 @@
         </android.support.v4.widget.NestedScrollView>
 
     </android.support.design.widget.CoordinatorLayout>
-
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/details_adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id"
+        />
 </RelativeLayout>
