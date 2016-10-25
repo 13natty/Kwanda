@@ -66,9 +66,11 @@ public class MainActivity extends AppCompatActivity {
     public static final String FDLP = "FDLP";
     public static final String DeliveryDate = "DayOfDelivery";
     public static final String PregnancyDuration = "Duration";
+    public static final String SeletedDay = "SeletedDay";
+    public static final String SeletedAngle = "SeletedAngle";
 
     private SharedPreferences sharedpreferences;
-    InterstitialAd mInterstitialAd;
+    private int date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,6 +181,8 @@ public class MainActivity extends AppCompatActivity {
         editor.putString(FDLP, dateStr);
         editor.putString(DeliveryDate, deliveryDateStr);
         editor.putInt(PregnancyDuration, pregnancyDuration);
+        editor.putInt(SeletedDay, date);
+        editor.putFloat(SeletedAngle, angle);
         editor.commit();
 
         Intent myIntent = new Intent(MainActivity.this, DetailsActivity.class);
@@ -208,23 +212,6 @@ public class MainActivity extends AppCompatActivity {
     public Bitmap getResizedBitmap(Bitmap image, int bitmapWidth, int bitmapHeight) {
         return Bitmap.createScaledBitmap(image, bitmapWidth, bitmapHeight, true);
     }
-
-    /*public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
-        int width = bm.getWidth();
-        int height = bm.getHeight();
-        float scaleWidth = ((float) newWidth) / width;
-        float scaleHeight = ((float) newHeight) / height;
-        // CREATE A MATRIX FOR THE MANIPULATION
-//        Matrix matrix = new Matrix();
-        // RESIZE THE BIT MAP
-        matrix.postScale(scaleWidth, scaleHeight);
-
-        // "RECREATE" THE NEW BITMAP
-        Bitmap resizedBitmap = Bitmap.createBitmap(
-                bm, 0, 0, width, height, matrix, false);
-
-        return resizedBitmap;
-    }*/
 
     String getMonthForInt(int num) {
         String month = "wrong";
@@ -295,7 +282,7 @@ public class MainActivity extends AppCompatActivity {
             angle+=360;
         }
 
-        int date = (int) Math.round(angle*1.0138888888888);
+        date = (int) Math.round(angle*1.0138888888888);
 
 
         dateStr = getDateStr(date);

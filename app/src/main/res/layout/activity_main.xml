@@ -9,6 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin_main"
     android:paddingRight="@dimen/activity_horizontal_margin_main"
     android:paddingTop="@dimen/activity_vertical_margin_main"
+    android:background="#eeccdd"
     tools:context="com.example.f3838284.kwanda.MainActivity">
 
     <TextView
@@ -139,8 +140,6 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:orientation="horizontal"
-        android:gravity="bottom"
-        android:layout_alignParentBottom="true"
         android:layout_marginTop="20dp"
         >
 
