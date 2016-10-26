@@ -5,6 +5,8 @@ android {
     buildToolsVersion "24.0.1"
 
     defaultConfig {
+        resValue "string", "KwandaAdmobApiKey", KwandaAdmobApiKey
+        buildConfigField("String", "KwandaInterstitialAdApiKey", KwandaInterstitialAdApiKey)
         applicationId "com.example.f3838284.kwanda"
         minSdkVersion 16
         targetSdkVersion 24
@@ -28,7 +30,7 @@ android {
         }
     }
     sourceSets { free { java.srcDirs = ['src/main/java', 'src/free/java/'] } }
-    sourceSets { paid { java.srcDirs = ['src/main/java', 'src/main/java/'] } }
+    sourceSets { paid { java.srcDirs = ['src/main/java', 'src/paid/java/'] } }
 }
 
 dependencies {

@@ -141,6 +141,7 @@
         android:layout_centerHorizontal="true"
         android:orientation="horizontal"
         android:layout_marginTop="20dp"
+        android:layout_alignParentBottom="true"
         >
 
 

@@ -5,7 +5,7 @@
     <string name="FDLMP">FDLP </string>
     <string name="delivery">Probable Day of Delivery </string>
     <string name="duration">Pregnancy Duration </string>
-    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_ad_unit_id"></string>
     <string-array name="duration_units">
         <item>Days</item>
         <item>Weeks</item>
