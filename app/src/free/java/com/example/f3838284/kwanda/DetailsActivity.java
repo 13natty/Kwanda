@@ -1,9 +1,11 @@
 package com.example.f3838284.kwanda;
 
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -14,11 +16,17 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 import static com.example.f3838284.kwanda.MainActivity.MyPREFERENCES;
 
@@ -28,38 +36,85 @@ public class DetailsActivity extends AppCompatActivity {
     private int pregnancyDuration;
     private int week;
 
+    @InjectView(R.id.firstcard_text) TextView firstCardTitle;
+    @InjectView(R.id.size_text) TextView sizeText;
+    @InjectView(R.id.size_text_one) TextView sizeText1;
+    @InjectView(R.id.size_text_two) TextView sizeText2;
+    @InjectView(R.id.size_text_three) TextView sizeText3;
+    @InjectView(R.id.inside_text) TextView insideText;
+
+    @InjectView(R.id.size_image) ImageView sizeImage;
+    @InjectView(R.id.MyBg) ImageView myBg;
+
+    @InjectView(R.id.embryo_size) CardView embryoSize;
+
+    @InjectView(R.id.MyToolbar) Toolbar toolbar;
+
+    @InjectView(R.id.collapse_toolbar) CollapsingToolbarLayout collapsingToolbar;
+
+    @InjectView(R.id.MyAppbar) AppBarLayout myAppBar;
+
+    @InjectView(R.id.details_adView) AdView mAdView;
+    private int maxWidth;
+    private int maxHeight;
+    private boolean layedOut = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
-
-        TextView firstCardTitle = (TextView) findViewById(R.id.firstcard_text);
-        ImageView sizeImage = (ImageView) findViewById(R.id.size_image);
-        TextView sizeText = (TextView) findViewById(R.id.size_text);
-        CardView embryoSize = (CardView) findViewById(R.id.embryo_size);
-        TextView sizeText1 = (TextView) findViewById(R.id.size_text_one);
-        TextView sizeText2 = (TextView) findViewById(R.id.size_text_two);
-        TextView sizeText3 = (TextView) findViewById(R.id.size_text_three);
-        TextView insideText = (TextView) findViewById(R.id.inside_text);
-        AdView mAdView = (AdView) findViewById(R.id.details_adView);
-
+		ButterKnife.inject(this);
+        
         ToastListener toastListener = new ToastListener(this);
 
         mAdView.setAdListener(toastListener);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
-        sharedpreferences = getSharedPreferences(MyPREFERENCES, getApplicationContext().MODE_PRIVATE);
-        pregnancyDuration = sharedpreferences.getInt("Duration", 1);
+        layedOut = false;
+        // Retrieve date records
+        String URL = "content://com.example.f3838284.kwanda/data";
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.MyToolbar);
+        Uri students = Uri.parse(URL);
+        Cursor c = managedQuery(students, null, null, null, "FDLP");
+
+        if (c.moveToFirst()) {
+            do{
+                Toast.makeText(this,
+                        c.getString(c.getColumnIndex(MyProvider._ID)) +
+                                ", FDLP " +  c.getString(c.getColumnIndex( MyProvider.FDLP)) +
+                                ", DeliveryDate " + c.getString(c.getColumnIndex( MyProvider.DeliveryDate)),
+                        Toast.LENGTH_SHORT).show();
+                pregnancyDuration = Integer.parseInt(c.getString(c.getColumnIndex( MyProvider.PregnancyDuration)));
+            } while (c.moveToNext());
+        }
+
+
+        sizeImage.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                sizeImage.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                if(!layedOut) {
+                    //maxHeight = sizeImage.getHeight(); //height is ready
+                    maxWidth = sizeImage.getWidth(); //width is ready
+
+                    maxHeight = maxWidth * 160 / 240;
+
+                    ViewGroup.LayoutParams params = sizeImage.getLayoutParams();
+                    params.height = maxHeight;
+                    sizeImage.requestLayout();
+                    layedOut = true;
+                }
+
+            }
+        });
+
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, getApplicationContext().MODE_PRIVATE);
+//        pregnancyDuration = sharedpreferences.getInt(getString(R.string.pref_duration), 1);
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        final CollapsingToolbarLayout collapsingToolbar =
-                (CollapsingToolbarLayout) findViewById(R.id.collapse_toolbar);
-
-        final ImageView myBg = (ImageView) findViewById(R.id.MyBg);
         week = pregnancyDuration/7;
         firstCardTitle.setText("Common pregnancy symptoms for week "+week);
         DisplayMetrics displaymetrics = new DisplayMetrics();
@@ -120,6 +175,7 @@ public class DetailsActivity extends AppCompatActivity {
                         "51% of women experience fatigue as a symptom during week 3 of pregnancy.");
                 sizeText3.setText("46%Cramps\n" +
                         "46% of women experience cramping as a symptom during week 3 of pregnancy.");
+
                 sizeImage.setBackgroundResource(R.drawable.week3_embryo_size_poppyseed);
                 sizeText.setText("Embryo Size\n" +
                         "Your baby is about the size of a poppy seed during week 3. \n" +
@@ -990,7 +1046,6 @@ public class DetailsActivity extends AppCompatActivity {
                 break;
         }
 
-        AppBarLayout myAppBar = (AppBarLayout) findViewById(R.id.MyAppbar);
         myAppBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener(){
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {

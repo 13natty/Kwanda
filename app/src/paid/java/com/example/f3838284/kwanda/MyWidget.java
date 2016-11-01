@@ -6,34 +6,43 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
+import android.database.Cursor;
+import android.net.Uri;
 import android.widget.RemoteViews;
 
-import java.lang.reflect.Array;
 import java.util.Calendar;
-
 import static com.example.f3838284.kwanda.MainActivity.MyPREFERENCES;
+
 
 /**
  * Implementation of App Widget functionality.
  */
 public class MyWidget extends AppWidgetProvider {
 
-    private static SharedPreferences sharedpreferences;
     private static int pregnancyDuration;
     private static int year;
     private static int dateIndex = 0;
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
-
-        sharedpreferences = context.getSharedPreferences(MyPREFERENCES, context.MODE_PRIVATE);
-
         CharSequence widgetText = context.getString(R.string.appwidget_text);
         Calendar c = Calendar.getInstance();
         int dayOfTheYear = c.get(Calendar.DAY_OF_YEAR);
         year = c.get(Calendar.YEAR);
-        int date = sharedpreferences.getInt("SeletedDay", 1);
+
+        // Retrieve date records
+        String URL = "content://com.example.f3838284.kwanda/data";
+
+        Uri uri = Uri.parse(URL);
+        Cursor cursor = context.getContentResolver().query(uri, null, null, null, "FDLP");
+
+        int date = -1;
+        if (cursor.moveToFirst()) {
+            do{
+
+                date = Integer.parseInt(cursor.getString(cursor.getColumnIndex( MyProvider.SelectedDay)));
+            } while (cursor.moveToNext());
+        }
         pregnancyDuration = dayOfTheYear-date;
         if(date != -1){
             widgetText = " Week "+pregnancyDuration/7+"";

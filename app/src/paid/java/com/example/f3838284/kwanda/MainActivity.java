@@ -1,11 +1,13 @@
 package com.example.f3838284.kwanda;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
@@ -23,6 +25,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.example.f3838284.kwanda.MyProvider;
 
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
@@ -60,8 +64,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String FDLP = "FDLP";
     public static final String DeliveryDate = "DayOfDelivery";
     public static final String PregnancyDuration = "Duration";
-    public static final String SeletedDay = "SeletedDay";
-    public static final String SeletedAngle = "SeletedAngle";
+    public static final String SelectedDay = "SeletedDay";
+    public static final String SelectedAngle = "SeletedAngle";
 
     private SharedPreferences sharedpreferences;
     private int date;
@@ -135,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                 if(!dateStr.equalsIgnoreCase("Not set")) {
                     showDetails();
                 }else{
-                    showDialog(MainActivity.this, "Rotate", "Rotate wheel to select your First Day Of Last Period (FDLP)");
+                    showDialog(MainActivity.this, getString(R.string.error_title), getString(R.string.error_text));
                 }
 
             }
@@ -147,13 +151,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showDetails() {
-        SharedPreferences.Editor editor = sharedpreferences.edit();
+
+        // Add a new student record
+        ContentValues values = new ContentValues();
+
+        values.put(MyProvider.FDLP,dateStr+"");
+        values.put(MyProvider.DeliveryDate,deliveryDateStr+"");
+        values.put(MyProvider.PregnancyDuration,pregnancyDuration+"");
+        values.put(MyProvider.SelectedDay,date+"");
+        values.put(MyProvider.SelectedAngle,angle+"");
+
+        Uri uri = getContentResolver().insert(
+                MyProvider.CONTENT_URI, values);
+
+
+
+
+
+        /*SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString(FDLP, dateStr);
         editor.putString(DeliveryDate, deliveryDateStr);
         editor.putInt(PregnancyDuration, pregnancyDuration);
-        editor.putInt(SeletedDay, date);
-        editor.putFloat(SeletedAngle, angle);
-        editor.commit();
+        editor.putInt(SelectedDay, date);
+        editor.putFloat(SelectedAngle, angle);
+        editor.commit();*/
 
         Intent myIntent = new Intent(MainActivity.this, DetailsActivity.class);
         //myIntent.putExtra("key", value); //Optional parameters
@@ -166,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         if (title != null) builder.setTitle(title);
 
         builder.setMessage(message);
-        builder.setPositiveButton("OK", null);
+        builder.setPositiveButton(getString(R.string.buttonOK), null);
         //builder.setNegativeButton("Cancel", null);
         builder.show();
     }
@@ -176,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     String getMonthForInt(int num) {
-        String month = "wrong";
+        String month = getString(R.string.wrong);
         DateFormatSymbols dfs = new DateFormatSymbols();
         String[] months = dfs.getMonths();
         if (num >= 0 && num <= 11 ) {

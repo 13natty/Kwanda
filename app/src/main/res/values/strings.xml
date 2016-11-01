@@ -13,4 +13,17 @@
     </string-array>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+    <string name="error_title">Rotate</string>
+    <string name="error_text">Rotate wheel to select your First Day Of Last Period (FDLP)</string>
+    <string name="testDeviceID">3EB0234921C9D54B84C7DA7B018CC8AF</string>
+    <string name="buttonOK">OK</string>
+    <string name="wrong">wrong</string>
+    <string name="pref_duration">Duration</string>
+    <string name="BreastPain">Breast Pain</string>
+    <string name="week_1_breast_pain">48% of women experience breast pain and tenderness as a symptom during week 1 of pregnancy.</string>
+    <string name="Fatigue">Fatigue</string>
+    <string name="week_1_fatigue">44% of women experience fatigue as a symptom during week 1 of pregnancy.</string>
+    <string name="Cramps">Cramps</string>
+    <string name="week_1_cramps">41% of women experience cramps as a symptom during week 1 of pregnancy</string>
+
 </resources>

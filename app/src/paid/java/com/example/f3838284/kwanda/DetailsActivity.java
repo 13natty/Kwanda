@@ -1,9 +1,11 @@
 package com.example.f3838284.kwanda;
 
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +16,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,7 +28,6 @@ import static com.example.f3838284.kwanda.MainActivity.MyPREFERENCES;
 
 public class DetailsActivity extends AppCompatActivity {
 
-    private SharedPreferences sharedpreferences;
     private int pregnancyDuration;
     private int week;
 
@@ -46,14 +49,47 @@ public class DetailsActivity extends AppCompatActivity {
 
     @InjectView(R.id.MyAppbar) AppBarLayout myAppBar;
 
+	private int maxWidth;
+    private int maxHeight;
+    private boolean layedOut = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         ButterKnife.inject(this);
+		layedOut = false;
+        // Retrieve date records
+        String URL = "content://com.example.f3838284.kwanda/data";
 
-        sharedpreferences = getSharedPreferences(MyPREFERENCES, getApplicationContext().MODE_PRIVATE);
-        pregnancyDuration = sharedpreferences.getInt("Duration", 1);
+        Uri students = Uri.parse(URL);
+        Cursor c = managedQuery(students, null, null, null, "FDLP");
+
+        if (c.moveToFirst()) {
+            do{
+
+                pregnancyDuration = Integer.parseInt(c.getString(c.getColumnIndex( MyProvider.PregnancyDuration)));
+            } while (c.moveToNext());
+        }
+
+
+        sizeImage.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                sizeImage.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                if(!layedOut) {
+                    //maxHeight = sizeImage.getHeight(); //height is ready
+                    maxWidth = sizeImage.getWidth(); //width is ready
+
+                    maxHeight = maxWidth * 160 / 240;
+
+                    ViewGroup.LayoutParams params = sizeImage.getLayoutParams();
+                    params.height = maxHeight;
+                    sizeImage.requestLayout();
+                    layedOut = true;
+                }
+
+            }
+        });
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -118,6 +154,7 @@ public class DetailsActivity extends AppCompatActivity {
                         "51% of women experience fatigue as a symptom during week 3 of pregnancy.");
                 sizeText3.setText("46%Cramps\n" +
                         "46% of women experience cramping as a symptom during week 3 of pregnancy.");
+
                 sizeImage.setBackgroundResource(R.drawable.week3_embryo_size_poppyseed);
                 sizeText.setText("Embryo Size\n" +
                         "Your baby is about the size of a poppy seed during week 3. \n" +
