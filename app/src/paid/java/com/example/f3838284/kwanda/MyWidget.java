@@ -53,9 +53,9 @@ public class MyWidget extends AppWidgetProvider {
         views.setTextViewText(R.id.delivery_text, "Birth day : "+getDateStr(date+280));
         views.setTextViewText(R.id.appwidget_text, widgetText);
         int trimester = 0;
-        if(pregnancyDuration/30.41 > 2.0f){
+        if(pregnancyDuration/93.333333333333 > 2.0f){
             trimester = 3;
-        }else if(pregnancyDuration/30.41 > 1.0f){
+        }else if(pregnancyDuration/93.333333333333 > 1.0f){
             trimester = 2;
         }else{
             trimester = 1;
